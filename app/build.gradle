@@ -7,6 +7,11 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
+    def properties = new Properties()
+    file("aws-config.properties").withInputStream {
+        properties.load(it)
+    }
+
     defaultConfig {
         applicationId "edu.sjsu.nutritionfinder"
         minSdkVersion 21
@@ -15,6 +20,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "S3_ACCESS_KEY_ID", "\"${properties.getProperty('s3_access_key_id')}\""
+        buildConfigField "String", "S3_ACCESS_KEY_SECRET", "\"${properties.getProperty('s3_access_key_secret')}\""
     }
 
     buildTypes {
@@ -30,7 +37,12 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    buildFeatures {
+        dataBinding true
+    }
 }
+
 
 dependencies {
 
@@ -41,7 +53,17 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.3'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.3'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    // BEGIN AWS DEPENDENCIES
+    def aws_version = "2.16.+"
+    def aws_rekognition_version = "2.22.6"
+    implementation "com.amazonaws:aws-android-sdk-s3:$aws_version"
+    implementation("com.amazonaws:aws-android-sdk-mobile-client:$aws_version") { transitive = true }
+    implementation "com.amazonaws:aws-android-sdk-rekognition:$aws_rekognition_version"
+    // END AWS DEPENDENCIES
 }
