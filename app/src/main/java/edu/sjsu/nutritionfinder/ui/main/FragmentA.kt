@@ -1,5 +1,7 @@
 package edu.sjsu.nutritionfinder.ui.main
 
+import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.media.Image
@@ -9,12 +11,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ProgressBar
 import androidx.core.graphics.BitmapCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.amazonaws.services.rekognition.AmazonRekognitionClient
 import edu.sjsu.nutritionfinder.R
 import edu.sjsu.nutritionfinder.databinding.LayoutFragmentABinding
@@ -25,6 +29,8 @@ class FragmentA : Fragment() {
 
     private lateinit var dataBinding: LayoutFragmentABinding
     private lateinit var viewModel: FragmentAViewModel
+    private lateinit var progressDialog: AlertDialog
+
     companion object{
         private val CAMERA_ACTIVITY_RESULT = 1
     }
@@ -48,6 +54,24 @@ class FragmentA : Fragment() {
         dataBinding.btnNavigate.setOnClickListener{
             launchCamera()
         }
+
+        progressDialog = AlertDialog.Builder(this.activity).setCancelable(false).setView(R.layout.loader).create()
+        viewModel.imageRecognitionResult = object : FragmentAViewModel.ImageRecognitionResult{
+
+            override fun onSuccess(imageName: String) {
+                activity?.runOnUiThread {
+                    progressDialog.dismiss()
+                    val bundle = Bundle()
+                    bundle.putString("imageName", imageName)
+                    findNavController().navigate(R.id.move_to_b, bundle)
+                }
+            }
+
+            override fun onFailure() {
+                progressDialog.dismiss()
+                AlertDialog.Builder(this@FragmentA.context).setMessage("Some Error Occured. Please try again later.")
+            }
+        }
     }
 
     private fun launchCamera() {
@@ -64,6 +88,7 @@ class FragmentA : Fragment() {
                 )}
 
                 file?.let {
+                    progressDialog.show()
                     viewModel.uploadImageToS3(file)
                 }
             }
