@@ -12,8 +12,7 @@
         tools:layout="@layout/layout_fragment_a">
         <action
             android:id="@+id/move_to_b"
-            app:destination="@id/fragment_b">
-        </action>
+            app:destination="@id/fragment_b"></action>
 
     </fragment>
 
@@ -21,6 +20,16 @@
         android:id="@+id/fragment_b"
         android:name="edu.sjsu.nutritionfinder.ui.main.FragmentB"
         android:label="Fragment B"
-        tools:layout="@layout/layout_fragment_b"></fragment>
+        tools:layout="@layout/layout_fragment_b">
+        <action
+            android:id="@+id/move_to_nutrition_Details"
+            app:destination="@id/fragment_nutrition_details"></action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_nutrition_details"
+        android:name="edu.sjsu.nutritionfinder.ui.main.NutritionDetailsFragment"
+        android:label="Nutrition Details"
+        tools:layout="@layout/fragment_nutrition_details"></fragment>
 
 </navigation>

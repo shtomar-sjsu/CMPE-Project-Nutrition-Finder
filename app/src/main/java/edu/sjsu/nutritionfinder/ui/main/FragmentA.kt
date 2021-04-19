@@ -16,6 +16,7 @@ import androidx.core.graphics.BitmapCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
@@ -30,10 +31,27 @@ class FragmentA : Fragment() {
     private lateinit var dataBinding: LayoutFragmentABinding
     private lateinit var viewModel: FragmentAViewModel
     private lateinit var progressDialog: AlertDialog
+    private val observer = Observer<String?> {
+        when (it) {
+            null -> {
+                progressDialog.dismiss()
+                AlertDialog.Builder(this@FragmentA.context)
+                    .setMessage("Some Error Occured. Please try again later.")
+            }
 
-    companion object{
+            else -> {
+                progressDialog.dismiss()
+                val bundle = Bundle()
+                bundle.putString("imageName", it)
+                findNavController().navigate(R.id.move_to_b, bundle)
+            }
+        }
+    }
+
+    companion object {
         private val CAMERA_ACTIVITY_RESULT = 1
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -51,27 +69,13 @@ class FragmentA : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = defaultViewModelProviderFactory.create(FragmentAViewModel::class.java)
-        dataBinding.btnNavigate.setOnClickListener{
+        dataBinding.btnNavigate.setOnClickListener {
             launchCamera()
         }
-
-        progressDialog = AlertDialog.Builder(this.activity).setCancelable(false).setView(R.layout.loader).create()
-        viewModel.imageRecognitionResult = object : FragmentAViewModel.ImageRecognitionResult{
-
-            override fun onSuccess(imageName: String) {
-                activity?.runOnUiThread {
-                    progressDialog.dismiss()
-                    val bundle = Bundle()
-                    bundle.putString("imageName", imageName)
-                    findNavController().navigate(R.id.move_to_b, bundle)
-                }
-            }
-
-            override fun onFailure() {
-                progressDialog.dismiss()
-                AlertDialog.Builder(this@FragmentA.context).setMessage("Some Error Occured. Please try again later.")
-            }
-        }
+        progressDialog =
+            AlertDialog.Builder(this.activity).setCancelable(false).setView(R.layout.loader)
+                .create()
+        viewModel.liveDataImageRecognitionResult.observe(viewLifecycleOwner, observer)
     }
 
     private fun launchCamera() {
@@ -81,11 +85,13 @@ class FragmentA : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when(requestCode){
+        when (requestCode) {
             CAMERA_ACTIVITY_RESULT -> {
-                val file = this.context?.let { viewModel.copyBitmapToFileSystem(
-                    data?.extras?.get("data") as? Bitmap?
-                )}
+                val file = this.context?.let {
+                    viewModel.copyBitmapToFileSystem(
+                        data?.extras?.get("data") as? Bitmap?
+                    )
+                }
 
                 file?.let {
                     progressDialog.show()
@@ -93,5 +99,10 @@ class FragmentA : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        viewModel.liveDataImageRecognitionResult.removeObserver(observer)
     }
 }

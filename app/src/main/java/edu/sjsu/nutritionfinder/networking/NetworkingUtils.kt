@@ -18,8 +18,8 @@ class NetworkingUtils {
         fun asyncConnection(
             url: String?,
             method: String,
-            payload: String,
-            headers: Map<String?, String?>,
+            payload: String?,
+            headers: Map<String?, String?>?,
             responseHandler: ResponseHandler
         ) {
             executor.execute(Runnable {
@@ -30,18 +30,23 @@ class NetworkingUtils {
                     url1 = URL(url)
                     urlConnection = url1.openConnection() as HttpURLConnection
                     urlConnection.setRequestMethod(method)
-                    for ((key, value) in headers) {
-                        urlConnection.setRequestProperty(key, value)
+                    headers?.let {
+                        for ((key, value) in headers) {
+                            urlConnection.setRequestProperty(key, value)
+                        }
                     }
+
                     if (method.equals("POST", ignoreCase = true)) {
                         urlConnection.setDoOutput(true)
-                        val bytes = payload.toByteArray(charset("utf-8"))
-                        urlConnection.getOutputStream().write(bytes, 0, bytes.size)
+                        payload?.let {
+                            val bytes = payload.toByteArray(charset("utf-8"))
+                            urlConnection.outputStream.write(bytes, 0, bytes.size)
+                        }
                     }
                     urlConnection.connect()
                     val responseCode: Int = urlConnection.getResponseCode()
                     if (responseCode == 200) {
-                        inputStream = urlConnection.getInputStream()
+                        inputStream = urlConnection.inputStream
                         val sb = StringBuilder()
                         val br = BufferedReader(InputStreamReader(inputStream))
                         var line: String?

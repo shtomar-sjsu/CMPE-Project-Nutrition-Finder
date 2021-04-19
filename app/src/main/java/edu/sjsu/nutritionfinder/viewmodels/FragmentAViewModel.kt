@@ -3,6 +3,8 @@ package edu.sjsu.nutritionfinder.viewmodels
 import android.app.Application
 import android.graphics.Bitmap
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.amazonaws.auth.AWSCredentials
 import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
@@ -23,15 +25,13 @@ import java.util.concurrent.Executors
 
 class FragmentAViewModel(application: Application) : AndroidViewModel(application) {
 
-    interface ImageRecognitionResult {
-        fun onSuccess(imageName: String)
-        fun onFailure()
+    val liveDataImageRecognitionResult: MutableLiveData<String?> by lazy {
+        MutableLiveData()
     }
 
     val transferUtility: TransferUtility
     private val tempFileName = "tempImage.jpeg"
     var threadPool = Executors.newSingleThreadExecutor()
-    lateinit var imageRecognitionResult: ImageRecognitionResult
     var transferListener = object : TransferListener {
         override fun onStateChanged(id: Int, state: TransferState?) {
             val state = state?.name ?: ""
@@ -47,7 +47,7 @@ class FragmentAViewModel(application: Application) : AndroidViewModel(applicatio
 
         override fun onError(id: Int, ex: Exception?) {
             print("++++++ ---- Error")
-            imageRecognitionResult.onFailure()
+            liveDataImageRecognitionResult.postValue(null)
 
         }
     }
@@ -78,7 +78,7 @@ class FragmentAViewModel(application: Application) : AndroidViewModel(applicatio
                 getImageName(detectLabelResult)
                 deleteImageFromS3()
             } catch (e: java.lang.Exception) {
-                imageRecognitionResult.onFailure()
+                liveDataImageRecognitionResult.postValue(null)
             }
         }
     }
@@ -92,7 +92,7 @@ class FragmentAViewModel(application: Application) : AndroidViewModel(applicatio
         for (label in detectLabelResult.labels) {
             for (parent in label.parents) {
                 if (parent.name == "Vegetable") {
-                    imageRecognitionResult.onSuccess(label.name)
+                    liveDataImageRecognitionResult.postValue(label.name)
                     return
                 }
             }
@@ -122,9 +122,5 @@ class FragmentAViewModel(application: Application) : AndroidViewModel(applicatio
         image.compress(Bitmap.CompressFormat.JPEG, 100, fos)
         fos.close()
         return tempImageFile
-    }
-
-    private fun removeImageFromS3() {
-
     }
 }
