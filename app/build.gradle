@@ -66,4 +66,8 @@ dependencies {
     implementation("com.amazonaws:aws-android-sdk-mobile-client:$aws_version") { transitive = true }
     implementation "com.amazonaws:aws-android-sdk-rekognition:$aws_rekognition_version"
     // END AWS DEPENDENCIES
+
+    //Retrofit and Moshi
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation 'com.squareup.retrofit2:converter-moshi:2.4.0'
 }

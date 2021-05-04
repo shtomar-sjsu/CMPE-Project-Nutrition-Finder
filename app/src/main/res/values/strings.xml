@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">NutritionFinder</string>
+    <string name="app_name">Nutrition Finder</string>
+    <string name="intro">Take a picture of a Vegetable, whose nutrition info you need to find out</string>
 </resources>

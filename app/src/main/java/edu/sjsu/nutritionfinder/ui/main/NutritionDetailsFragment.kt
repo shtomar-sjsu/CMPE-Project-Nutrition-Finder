@@ -7,11 +7,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import edu.sjsu.nutritionfinder.R
 import edu.sjsu.nutritionfinder.adapters.NutritionListAdapter
 import edu.sjsu.nutritionfinder.databinding.FragmentNutritionDetailsBinding
-import edu.sjsu.nutritionfinder.models.Nutrient
 
 class NutritionDetailsFragment : Fragment() {
 
@@ -34,7 +32,7 @@ class NutritionDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         dataBinding.btnDone.setOnClickListener {
-            findNavController().popBackStack(R.id.fragment_a, false)
+            findNavController().popBackStack(R.id.home_fragment, false)
         }
 
         setupRecyclerView()

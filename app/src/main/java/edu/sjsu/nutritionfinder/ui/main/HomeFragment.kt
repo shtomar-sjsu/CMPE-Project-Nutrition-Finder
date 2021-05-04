@@ -1,41 +1,31 @@
 package edu.sjsu.nutritionfinder.ui.main
 
 import android.app.AlertDialog
-import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Bitmap
-import android.media.Image
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ProgressBar
-import androidx.core.graphics.BitmapCompat
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
-import com.amazonaws.services.rekognition.AmazonRekognitionClient
 import edu.sjsu.nutritionfinder.R
-import edu.sjsu.nutritionfinder.databinding.LayoutFragmentABinding
-import edu.sjsu.nutritionfinder.viewmodels.FragmentAViewModel
-import java.io.FileOutputStream
+import edu.sjsu.nutritionfinder.databinding.LayoutFragmentHomeBinding
+import edu.sjsu.nutritionfinder.viewmodels.HomeFragmentViewModel
 
-class FragmentA : Fragment() {
+class HomeFragment : Fragment() {
 
-    private lateinit var dataBinding: LayoutFragmentABinding
-    private lateinit var viewModel: FragmentAViewModel
+    private lateinit var dataBinding: LayoutFragmentHomeBinding
+    private lateinit var viewModel: HomeFragmentViewModel
     private lateinit var progressDialog: AlertDialog
     private val observer = Observer<String?> {
         when (it) {
             null -> {
                 progressDialog.dismiss()
-                AlertDialog.Builder(this@FragmentA.context)
+                AlertDialog.Builder(this@HomeFragment.context)
                     .setMessage("Some Error Occured. Please try again later.")
             }
 
@@ -43,13 +33,13 @@ class FragmentA : Fragment() {
                 progressDialog.dismiss()
                 val bundle = Bundle()
                 bundle.putString("imageName", it)
-                findNavController().navigate(R.id.move_to_b, bundle)
+                findNavController().navigate(R.id.move_to_food_item_details, bundle)
             }
         }
     }
 
     companion object {
-        private val CAMERA_ACTIVITY_RESULT = 1
+        private const val CAMERA_ACTIVITY_RESULT = 1
     }
 
     override fun onCreateView(
@@ -59,7 +49,7 @@ class FragmentA : Fragment() {
     ): View? {
         dataBinding = DataBindingUtil.inflate(
             inflater,
-            R.layout.layout_fragment_a,
+            R.layout.layout_fragment_home,
             container,
             false
         )
@@ -68,7 +58,7 @@ class FragmentA : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = defaultViewModelProviderFactory.create(FragmentAViewModel::class.java)
+        viewModel = defaultViewModelProviderFactory.create(HomeFragmentViewModel::class.java)
         dataBinding.btnNavigate.setOnClickListener {
             launchCamera()
         }

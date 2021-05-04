@@ -3,33 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nutrition_finder_graph"
-    app:startDestination="@+id/fragment_a">
+    app:startDestination="@+id/home_fragment">
 
     <fragment
-        android:id="@+id/fragment_a"
-        android:name="edu.sjsu.nutritionfinder.ui.main.FragmentA"
-        android:label="Fragment A"
-        tools:layout="@layout/layout_fragment_a">
+        android:id="@+id/home_fragment"
+        android:name="edu.sjsu.nutritionfinder.ui.main.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/layout_fragment_home">
         <action
-            android:id="@+id/move_to_b"
-            app:destination="@id/fragment_b"></action>
+            android:id="@+id/move_to_food_item_details"
+            app:destination="@id/fragment_food_item"/>
 
     </fragment>
 
     <fragment
-        android:id="@+id/fragment_b"
-        android:name="edu.sjsu.nutritionfinder.ui.main.FragmentB"
-        android:label="Fragment B"
-        tools:layout="@layout/layout_fragment_b">
+        android:id="@+id/fragment_food_item"
+        android:name="edu.sjsu.nutritionfinder.ui.main.FoodItemFragment"
+        android:label="Food Item"
+        tools:layout="@layout/layout_fragment_food_item">
         <action
             android:id="@+id/move_to_nutrition_Details"
-            app:destination="@id/fragment_nutrition_details"></action>
+            app:destination="@id/fragment_nutrition_details"/>
     </fragment>
 
     <fragment
         android:id="@+id/fragment_nutrition_details"
         android:name="edu.sjsu.nutritionfinder.ui.main.NutritionDetailsFragment"
         android:label="Nutrition Details"
-        tools:layout="@layout/fragment_nutrition_details"></fragment>
+        tools:layout="@layout/fragment_nutrition_details"/>
 
 </navigation>

@@ -11,16 +11,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import edu.sjsu.nutritionfinder.R
-import edu.sjsu.nutritionfinder.databinding.LayoutFragmentBBinding
+import edu.sjsu.nutritionfinder.databinding.LayoutFragmentFoodItemBinding
 import edu.sjsu.nutritionfinder.models.Nutrient
-import edu.sjsu.nutritionfinder.viewmodels.FragmentBViewModel
-import java.util.ArrayList
+import edu.sjsu.nutritionfinder.models.NutritionInfo
+import edu.sjsu.nutritionfinder.viewmodels.FoodItemViewModel
+import java.util.*
 
-class FragmentB : Fragment() {
+class FoodItemFragment : Fragment() {
 
-    lateinit var dataBinding: LayoutFragmentBBinding
-    lateinit var viewModel: FragmentBViewModel
-    private val dataObserver = Observer<List<Nutrient>?> {
+    lateinit var dataBinding: LayoutFragmentFoodItemBinding
+    lateinit var viewModel: FoodItemViewModel
+    private val dataObserver = Observer<NutritionInfo?> {
         if (it == null) {
             AlertDialog.Builder(activity)
                 .setMessage("Some Error Occurred in fetching Nutrition Info").create().show()
@@ -28,7 +29,7 @@ class FragmentB : Fragment() {
             val bundle = Bundle()
             bundle.putParcelableArrayList(
                 NutritionDetailsFragment.NUTRITION_LIST_KEY,
-                it as ArrayList<out Parcelable>
+                it.foods[0].nutrientsList as ArrayList<out Parcelable>
             )
             findNavController().navigate(R.id.move_to_nutrition_Details, bundle)
         }
@@ -40,13 +41,13 @@ class FragmentB : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         dataBinding =
-            DataBindingUtil.inflate(inflater, R.layout.layout_fragment_b, container, false)
+            DataBindingUtil.inflate(inflater, R.layout.layout_fragment_food_item, container, false)
         return dataBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = defaultViewModelProviderFactory.create(FragmentBViewModel::class.java)
+        viewModel = defaultViewModelProviderFactory.create(FoodItemViewModel::class.java)
         dataBinding.veggieName =
             "Food item detected: ${arguments?.getString("imageName") ?: "Error occurred!!"}"
         dataBinding.showNutrition.setOnClickListener {

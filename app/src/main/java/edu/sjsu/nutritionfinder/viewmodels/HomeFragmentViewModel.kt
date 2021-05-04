@@ -23,7 +23,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.util.concurrent.Executors
 
-class FragmentAViewModel(application: Application) : AndroidViewModel(application) {
+class HomeFragmentViewModel(application: Application) : AndroidViewModel(application) {
 
     val liveDataImageRecognitionResult: MutableLiveData<String?> by lazy {
         MutableLiveData()
