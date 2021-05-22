@@ -33,7 +33,6 @@ class FoodItemViewModel(application: Application) : AndroidViewModel(application
                 override fun onFailure(call: Call<NutritionInfo?>, t: Throwable) {
                     liveDataNutritionInfo.value = null
                 }
-
             })
     }
 }

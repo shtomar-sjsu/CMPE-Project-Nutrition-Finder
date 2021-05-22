@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/home_fragment"
         android:name="edu.sjsu.nutritionfinder.ui.main.HomeFragment"
-        android:label="Home"
+        android:label="Select Food Item"
         tools:layout="@layout/layout_fragment_home">
         <action
             android:id="@+id/move_to_food_item_details"
@@ -19,7 +19,7 @@
     <fragment
         android:id="@+id/fragment_food_item"
         android:name="edu.sjsu.nutritionfinder.ui.main.FoodItemFragment"
-        android:label="Food Item"
+        android:label="Detected Food Item"
         tools:layout="@layout/layout_fragment_food_item">
         <action
             android:id="@+id/move_to_nutrition_Details"

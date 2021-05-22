@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Nutrition Finder</string>
-    <string name="intro">Take a picture of a Vegetable, whose nutrition info you need to find out</string>
+    <string name="intro">Choose a food item image or take a picture using camera, whose nutrition info need to be find.\nApp supports only fruits and vegetables.</string>
 </resources>

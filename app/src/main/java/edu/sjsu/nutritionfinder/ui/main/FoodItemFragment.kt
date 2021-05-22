@@ -50,6 +50,7 @@ class FoodItemFragment : Fragment() {
         viewModel = defaultViewModelProviderFactory.create(FoodItemViewModel::class.java)
         dataBinding.veggieName =
             "Food item detected: ${arguments?.getString("imageName") ?: "Error occurred!!"}"
+        dataBinding.imageSrc = arguments?.getString("imagePath") ?: ""
         dataBinding.showNutrition.setOnClickListener {
             arguments?.getString("imageName")?.let {
                 viewModel.fetchNutritionDetails(it)
