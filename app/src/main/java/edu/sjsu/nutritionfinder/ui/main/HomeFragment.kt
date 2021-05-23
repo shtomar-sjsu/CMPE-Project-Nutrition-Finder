@@ -19,6 +19,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import edu.sjsu.nutritionfinder.R
 import edu.sjsu.nutritionfinder.databinding.LayoutFragmentHomeBinding
 import edu.sjsu.nutritionfinder.viewmodels.HomeFragmentViewModel
@@ -82,6 +84,7 @@ class HomeFragment : Fragment() {
             AlertDialog.Builder(this.activity).setCancelable(false).setView(R.layout.loader)
                 .create()
         viewModel.liveDataImageRecognitionResult.observe(viewLifecycleOwner, observer)
+        setupAppBar()
     }
 
     private fun launchCamera() {
@@ -140,6 +143,11 @@ class HomeFragment : Fragment() {
                     BitmapFactory.decodeFileDescriptor(fileDescriptor.fileDescriptor)
                 }
         }
+    }
+
+    private fun setupAppBar() {
+        val navController = findNavController()
+        NavigationUI.setupWithNavController(dataBinding.toolBarHome, navController)
     }
 
     override fun onDetach() {

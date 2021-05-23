@@ -10,6 +10,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import edu.sjsu.nutritionfinder.R
 import edu.sjsu.nutritionfinder.databinding.LayoutFragmentFoodItemBinding
 import edu.sjsu.nutritionfinder.models.Nutrient
@@ -24,7 +26,7 @@ class FoodItemFragment : Fragment() {
         const val KEY_FOOD_ITEM_IMAGE_PATH = "imagePath"
     }
 
-    lateinit var dataBinding: LayoutFragmentFoodItemBinding
+    private lateinit var dataBinding: LayoutFragmentFoodItemBinding
     lateinit var viewModel: FoodItemViewModel
     private val dataObserver = Observer<NutritionInfo?> {
         if (it == null) {
@@ -59,6 +61,7 @@ class FoodItemFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = defaultViewModelProviderFactory.create(FoodItemViewModel::class.java)
+        setupToolBar()
         dataBinding.veggieName =
             "Food item detected: ${arguments?.getString(KEY_FOOD_ITEM_NAME) ?: "Error occurred!!"}"
         dataBinding.imageSrc = arguments?.getString(KEY_FOOD_ITEM_IMAGE_PATH) ?: ""
@@ -68,6 +71,11 @@ class FoodItemFragment : Fragment() {
             }
         }
         viewModel.liveDataNutritionInfo.observe(viewLifecycleOwner, dataObserver)
+    }
+
+    private fun setupToolBar() {
+        val navController = findNavController()
+        NavigationUI.setupWithNavController(dataBinding.toolBarFoodItem, navController)
     }
 
     override fun onDetach() {

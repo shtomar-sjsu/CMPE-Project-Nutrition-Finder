@@ -22,7 +22,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main_activity)
         var navController = findNavController(R.id.main_content)
         appbarConfig = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appbarConfig)
 
         if(!hasCameraPermission()){
             requestCameraPermission()
