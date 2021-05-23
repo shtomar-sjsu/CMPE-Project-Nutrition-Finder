@@ -19,6 +19,11 @@ import java.util.*
 
 class FoodItemFragment : Fragment() {
 
+    companion object {
+        const val KEY_FOOD_ITEM_NAME = "imageName"
+        const val KEY_FOOD_ITEM_IMAGE_PATH = "imagePath"
+    }
+
     lateinit var dataBinding: LayoutFragmentFoodItemBinding
     lateinit var viewModel: FoodItemViewModel
     private val dataObserver = Observer<NutritionInfo?> {
@@ -31,6 +36,12 @@ class FoodItemFragment : Fragment() {
                 NutritionDetailsFragment.NUTRITION_LIST_KEY,
                 it.foods[0].nutrientsList as ArrayList<out Parcelable>
             )
+            arguments?.also { args ->
+                bundle.putString(
+                    NutritionDetailsFragment.FOOD_ITEM_NAME_KEY,
+                    args.getString(KEY_FOOD_ITEM_NAME)
+                )
+            }
             findNavController().navigate(R.id.move_to_nutrition_Details, bundle)
         }
     }
@@ -49,10 +60,10 @@ class FoodItemFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = defaultViewModelProviderFactory.create(FoodItemViewModel::class.java)
         dataBinding.veggieName =
-            "Food item detected: ${arguments?.getString("imageName") ?: "Error occurred!!"}"
-        dataBinding.imageSrc = arguments?.getString("imagePath") ?: ""
+            "Food item detected: ${arguments?.getString(KEY_FOOD_ITEM_NAME) ?: "Error occurred!!"}"
+        dataBinding.imageSrc = arguments?.getString(KEY_FOOD_ITEM_IMAGE_PATH) ?: ""
         dataBinding.showNutrition.setOnClickListener {
-            arguments?.getString("imageName")?.let {
+            arguments?.getString(KEY_FOOD_ITEM_NAME)?.let {
                 viewModel.fetchNutritionDetails(it)
             }
         }

@@ -40,9 +40,9 @@ class HomeFragment : Fragment() {
             else -> {
                 progressDialog.dismiss()
                 val bundle = Bundle()
-                bundle.putString("imageName", it)
-                viewModel.tempImageFilePath?.also {filePath ->
-                    bundle.putString("imagePath", filePath)
+                bundle.putString(FoodItemFragment.KEY_FOOD_ITEM_NAME, it)
+                viewModel.tempImageFilePath?.also { filePath ->
+                    bundle.putString(FoodItemFragment.KEY_FOOD_ITEM_IMAGE_PATH, filePath)
                 }
 
                 findNavController().navigate(R.id.move_to_food_item_details, bundle)

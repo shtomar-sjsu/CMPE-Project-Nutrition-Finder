@@ -14,7 +14,8 @@ import edu.sjsu.nutritionfinder.databinding.FragmentNutritionDetailsBinding
 class NutritionDetailsFragment : Fragment() {
 
     companion object{
-        val NUTRITION_LIST_KEY = "nutritionlist"
+        const val NUTRITION_LIST_KEY = "nutritionlist"
+        const val FOOD_ITEM_NAME_KEY = "food_item"
     }
 
     lateinit var dataBinding: FragmentNutritionDetailsBinding
@@ -34,7 +35,8 @@ class NutritionDetailsFragment : Fragment() {
         dataBinding.btnDone.setOnClickListener {
             findNavController().popBackStack(R.id.home_fragment, false)
         }
-
+        val foodItemName = arguments?.getString(FOOD_ITEM_NAME_KEY) ?: ""
+        dataBinding.setTitle("Nutrition Details of $foodItemName")
         setupRecyclerView()
     }
 
